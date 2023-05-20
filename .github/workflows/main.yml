@@ -1,0 +1,31 @@
+name: makepkg
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  #schedule:
+    #- cron:  '0 27 3 * * *'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install Archlinux
+      run: curl -L https://github.com/zaoqi/github-actions-archlinux/raw/master/install.sh | sh
+    - name: Docker hello-world
+      run: |
+        sudo pacman --noconfirm -Syu docker
+        sudo systemctl start docker
+        docker run --rm hello-world
+    - name: makepkg
+      run: |
+         makepkg -fis
+         
